@@ -1,0 +1,108 @@
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+body{
+    font-family:sans-serif;
+    overflow-x:hidden;
+}
+#scroll{
+    display:flex;
+    flex-direction:row-reverse;
+    max-width:1200px;
+    margin:auto;
+}
+
+/* GRAPHIC */
+.scroll__graphic{
+    position:sticky;
+    top:0;
+    width:50%;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:#e5f1ed;
+}
+
+/* LEGEND — sits above the chart, horizontal row */
+#map-legend{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:14px;
+    font-family:sans-serif;
+    font-size:11px;
+    padding:8px 4px 12px;
+    color:#14412f;
+    flex-shrink:0;
+    width:90%;
+}
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    cursor:pointer;
+    padding:3px 8px;
+    border-radius:12px;
+    transition:background 0.2s;
+}
+
+.chart{
+    position:relative;
+    width:90%;
+    height:80vh;
+    overflow:hidden;
+}
+
+/* SVG fills container */
+.viz{
+    width:100%;
+    height:100%;
+}
+
+/* Country hover tooltip */
+#country-tip{
+    position:absolute;
+    pointer-events:none;
+    display:none;
+    font-family:sans-serif;
+    font-size:11px;
+    padding:4px 8px;
+    border-radius:3px;
+    z-index:20;
+}
+
+/* TEXT */
+.scroll__text{
+    width:50%;
+}
+.step{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+    padding:2rem;
+}
+.step .card{
+    background:#34634a;
+    color:#fff;
+    padding:2rem;
+    border-radius:4px;
+    max-width:420px;
+    width:100%;
+    transition:0.3s;
+}
+.step.is-active .card{
+    background:#34634a;
+}
+.step p{
+    margin:0 0 1rem 0;
+    line-height:1.5;
+}
+.step .card h2{
+    text-align:center;
+    margin-bottom:1.5rem;
+}
