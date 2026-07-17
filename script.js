@@ -383,7 +383,7 @@ function actuallyRenderStep(index){
 // scroll triggers depend on (mobile browser nav bars resize the viewport
 // mid-scroll and throw off trigger points). Use JS-measured px heights
 // instead, and matchMedia to branch mobile vs desktop.
-const mqMobile = window.matchMedia("(max-width: 800px)");
+const mqMobile = window.matchMedia("(max-width: 900px) and (pointer: coarse)");
 function applyResponsiveLayout(){
   const isMobile = mqMobile.matches;
   document.documentElement.classList.toggle("is-mobile", isMobile);
