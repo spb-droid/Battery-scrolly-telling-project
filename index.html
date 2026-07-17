@@ -1,71 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>Battery Scrolly Telling Test</title>
-    <link rel="stylesheet" href="./style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  </head>
-    
-  <body>
-  <section id="scroll">
+    <title>Scrollytelling Project</title>
+
+    <!-- CSS goes in the head -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<section id="scroll">
+
     <div class="scroll__graphic">
         <div class="chart">
-          <svg class="viz" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet"></svg>
+            <svg class="viz" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
     </div>
+
     <div class="scroll__text">
+
         <div class="step" data-step="0">
             <div class="card">
-                <h2>Underground</h2>
-                <p>Lithium is mined.</p>
-                <p>Iron is mined.</p>
-                <p>Graphite is mined.</p>
-                <p>Copper is mined.</p>
-                <p>Bauxite is mined to produce aluminum.</p>
+                <p>Most people associate batteries with lithium, nickel, and cobalt. But China's real advantage lies in both graphite and the refining needed to process battery materials.</p>
+                <p>China has a surplus of around 1.5 million tonnes of synthetic graphite, set to double by 2031. North America, by contrast, has a supply deficit expected to reach 300,000 tonnes by 2031.</p>
+                <p>For stationary energy storage, lithium iron phosphate (LFP) batteries have overtaken nickel manganese cobalt (NMC). Every LFP battery is built from two key components: a cathode, which defines the battery chemistry, and a graphite anode.</p>
             </div>
         </div>
+
         <div class="step" data-step="1">
             <div class="card">
-                <h2>Processing</h2>
-                <p>Materials are refined.</p>
+                <h2>Underground</h2>
+                <p>Every battery's journey starts underground with mining.</p>
+                <p>LFP batteries require:</p>
+<ul>
+    <li>Lithium for the cathode</li>
+    <li>Iron phosphate for the cathode</li>
+    <li>Graphite for the anode</li>
+</ul>
+                <p>Australia is the largest lithium producer, but China has invested heavily in mines across Australia, Argentina and Africa, and is projected to control 39% of global lithium extraction by 2030, according to Wood Mackenzie.</p>
+                <p>Graphite is even more concentrated. China produces around 70% of natural graphite and dominates global processing. No scalable alternative to graphite is expected in the near term.</p>
+                <p>Iron phosphate is mainly produced from byproducts of the steel industry and phosphoric acid derived from phosphate rock used in fertiliser production. Some feedstocks also come from titanium dioxide processing, which uses ilmenite.</p>
+                <p>Other materials include oil and gas for polymer production, iron ore for the steel outer casing, bauxite for aluminium conductors, copper ore for copper conductors and fluorspar (fluorite), used in fluorine chemistry to produce electrolyte salts alongside lithium and phosphorus compounds.</p>
             </div>
         </div>
+
         <div class="step" data-step="2">
             <div class="card">
-                <h2>Cathode & Anode Split</h2>
-                <p>Production splits into two streams.</p>
+                <h2>Processing</h2>
+                <p>Lithium is then refined into lithium carbonate or lithium hydroxide, while graphite is processed into spherical graphite or manufactured synthetically from petroleum coke.</p>
+                <p>China controls roughly 70% of global lithium chemical production, 93% of graphite processing, and more than 80% of spherical graphite capacity, according to Benchmark Mineral Intelligence.</p>
             </div>
         </div>
+
         <div class="step" data-step="3">
             <div class="card">
-                <h2>Cell Assembly</h2>
-                <p>Components combine into a cell.</p>
+                <h2>Cathode and anode split</h2>
+                <p>Battery materials are then transformed into electrodes.</p>
+                <p>Cathode manufacturers convert lithium and iron phosphate into cathode active material (CAM) before coating it onto aluminium foil, bound by glue.</p>
+                <p>Anode manufacturers process graphite into anode active material (AAM) before coating it onto copper foil.</p>
+                <p>Some cell manufacturers skip the electrode suppliers entirely, buying CAM and AAM directly and coating the electrodes in-house.</p>
+                <p>The IP for this process is constantly improving, with European facilities often failing, Benchmark's research manager Evan Hartley told Recharge.</p>
             </div>
         </div>
+
         <div class="step" data-step="4">
             <div class="card">
-                <h2>Battery Assembly</h2>
-                <p>Final battery is formed.</p>
+                <h2>Cell assembly</h2>
+                <p>The cell manufacturer buys the cathode and anode electrodes (or CAM and AAM if making the electrodes in-house), along with a separator and electrolyte.</p>
+                <p>The coated cathode and anode are separated by a thin polymer separator to prevent short circuiting. These thin layers are then stacked or rolled into a tight coil, filled with electrolyte, sealed inside a steel outer casing - forming the battery cell.</p>
+                <p>The cathode is connected to the positive terminal as a lithium source, and the anode to the negative terminal to store the lithium ions when charged - lithium salt electrolytes allow lithium ions to flow freely between the two.</p>
             </div>
         </div>
-    </div>
-</section>
-    <script src='https://cdn.jsdelivr.net/npm/d3@7'></script>
-<script src='https://unpkg.com/scrollama'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/d3-shape/1.2.0/d3-shape.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/d3-graphviz/5.6.0/d3-graphviz.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/d3plus/2.1.3/d3plus.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/d3-queue/3.0.7/d3-queue.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/d3-scale/1.0.7/d3-scale.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/d3fc/11.0.0/d3fc.bundle.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js'></script><script  src="./script.js"></script>
 
-  </body>
-  
+        <div class="step" data-step="5">
+            <div class="card">
+                <h2>Battery assembly</h2>
+                <p>Multiple battery cells are grouped into modules, which are then stacked into frames inside a larger cabinet.</p>
+                <p>To create a complete battery energy storage system (BESS), the cabinet is fitted with a battery management system (BMS) that monitors cell performance, state of charge and battery health. An energy management system (EMS) sits above this, deciding when the battery charges or discharges based on electricity prices, grid signals and operator strategy.</p>
+                <p>Some Chinese manufacturers are increasingly integrating the power conversion system (PCS), which converts DC battery power into AC grid power, directly into the battery block.</p>
+            </div>
+        </div>
+
+        <div class="step" data-step="6">
+            <div class="card">
+                <h2>China's edge</h2>
+                <p>"China's dominance in the battery supply chain stems from its vertical integration and early mover status across raw material resources, battery material processing and battery production," Benchmark Mineral Intelligence's senior BESS analyst told Recharge.</p>
+                <p>"Through centralised planning and considerable industry subsidies, China established itself as the global centre of the battery industry before other regions had a chance to present a viable alternative."</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- JS goes at the bottom for scrollytelling -->
+<script src="script.js"></script>
+
+</body>
 </html>
