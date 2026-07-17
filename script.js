@@ -137,7 +137,7 @@ let renderGen=0, flowAnimTimers=[], electrodeTimers=[];
 function clearFlowAnims(){flowAnimTimers.forEach(t=>clearTimeout(t));flowAnimTimers=[];}
 function clearElectrodeAnims(){electrodeTimers.forEach(t=>{clearTimeout(t);clearInterval(t);});electrodeTimers=[];}
 
-/* STEP 0 & 1 — JOURNEY TRACKS from mines into China (these are the
+/* STEPS 1 & 2 — JOURNEY TRACKS from mines into China (these are the
    tracks that were being lost — restored as animated great-circle
    flow lines that draw on as you scroll into China) */
 function buildFlowLines(myGen){
@@ -178,7 +178,7 @@ function buildProcNodes(myGen){
 
 function getRepMines(){const b={};MINES.forEach(m=>{if(!b[m.mat]||m.r>b[m.mat].r)b[m.mat]=m;});return Object.values(b);}
 
-/* STEP 2 — CATHODE/ANODE with real journey tracks from map nodes */
+/* STEP 3 — CATHODE/ANODE with real journey tracks from map nodes */
 function buildElectrodeScene(myGen){
   if(myGen!==renderGen)return;
   const g=svg.select("#g-overlay"); g.selectAll("*").remove(); clearElectrodeAnims();
@@ -240,7 +240,7 @@ function buildElectrodeScene(myGen){
   pile(catX,POWDER.cathode,"LFP powder",fDelay+900); pile(anX,POWDER.anode,"Graphite powder",fDelay+900);
 }
 
-/* STEP 3 — CELL ASSEMBLY: layer-by-layer build in correct order
+/* STEP 4 — CELL ASSEMBLY: layer-by-layer build in correct order
    Cathode(Al foil+LFP) → Separator → Anode(graphite+Cu foil) →
    Electrolyte fill → Casing seal → Formation (SEI) */
 function buildCellScene(myGen){
@@ -288,7 +288,7 @@ function buildCellScene(myGen){
   g.append("text").text("= one battery CELL").attr("x",cx).attr("y",stackBot+36).attr("text-anchor","middle").style("font-family","sans-serif").style("font-size","6px").style("font-weight","bold").style("fill",GREEN[800]).style("opacity",0).transition().delay(caseDelay+1000).duration(400).style("opacity",1);
 }
 
-/* STEP 4 — BATTERY ASSEMBLY: cell → module → pack (+BMS) */
+/* STEP 5 — BATTERY ASSEMBLY: cell → module → pack (+BMS) */
 function buildBatteryScene(myGen){
   if(myGen!==renderGen)return;
   const g=svg.select("#g-overlay"); g.selectAll("*").remove(); clearElectrodeAnims();
@@ -333,31 +333,44 @@ function actuallyRenderStep(index){
   clearFlowAnims(); clearElectrodeAnims();
   svg.select("#g-proc").selectAll("*").remove(); svg.select("#g-flow").selectAll("*").remove(); svg.select("#g-overlay").selectAll("*").remove();
 
+  // STEP 0 — Introduction: blank, no visualisation
   if(index===0){
+    if(legendDiv)legendDiv.style.display="none";
+    mapLayer.transition().duration(300).style("opacity",0);
+    overlayLayer.transition().duration(300).style("opacity",0);
+    mineNodes.transition().duration(300).style("opacity",0);
+  }
+  if(index===1){
     mapLayer.style("opacity",1); overlayLayer.transition().duration(300).style("opacity",0);
     if(legendDiv)legendDiv.style.display="flex";
     zoomTo(0,10,baseScale,700); mineNodes.transition().duration(600).style("opacity",0.95);
   }
-  if(index===1){
+  if(index===2){
     mapLayer.style("opacity",1); overlayLayer.transition().duration(300).style("opacity",0);
     if(legendDiv)legendDiv.style.display="none";
     zoomTo(110,32,baseScale*5.5,1200,(t)=>{if(myGen!==renderGen)return;mineNodes.style("opacity",0.95-t*0.45);})
       .then(()=>{if(myGen!==renderGen)return;buildProcNodes(myGen);buildFlowLines(myGen);});
   }
-  if(index===2){
+  if(index===3){
     if(legendDiv)legendDiv.style.display="none";
     zoomTo(0,10,baseScale,600).then(()=>{if(myGen!==renderGen)return;
       mapLayer.transition().duration(400).style("opacity",0.4); buildElectrodeScene(myGen); overlayLayer.transition().duration(400).style("opacity",1);});
   }
-  if(index===3){
+  if(index===4){
     if(legendDiv)legendDiv.style.display="none";
     mapLayer.transition().duration(400).style("opacity",0);
     buildCellScene(myGen); overlayLayer.transition().duration(400).style("opacity",1);
   }
-  if(index===4){
+  if(index===5){
     if(legendDiv)legendDiv.style.display="none";
     mapLayer.transition().duration(400).style("opacity",0);
     buildBatteryScene(myGen); overlayLayer.transition().duration(400).style("opacity",1);
+  }
+  // STEP 6 — Conclusion: blank, no visualisation
+  if(index===6){
+    if(legendDiv)legendDiv.style.display="none";
+    mapLayer.transition().duration(300).style("opacity",0);
+    overlayLayer.transition().duration(300).style("opacity",0);
   }
 }
 
