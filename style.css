@@ -117,7 +117,7 @@ body{
 /* MOBILE — stacked layout, sticky graphic shrinks to a top band.
    Actual pixel heights are set by JS (see script.js applyResponsiveLayout),
    these vh values are just the pre-JS fallback. */
-@media (max-width: 900px) and (pointer: coarse){
+@media (max-width: 640px){
     #scroll{
         flex-direction:column;
     }
