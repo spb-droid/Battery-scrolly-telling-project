@@ -53,7 +53,7 @@ body{
 .chart{
     position:relative;
     width:90%;
-    height:80vh;
+    height:80%;
     overflow:hidden;
 }
 
@@ -105,10 +105,44 @@ body{
 .step .card h2{
     text-align:center;
     margin-bottom:1.5rem;
-}.step .card ul{
+}
+.step .card ul{
     margin:0 0 1rem 1.2rem;
 }
 .step .card li{
     margin-bottom:0.4rem;
     line-height:1.5;
+}
+
+/* MOBILE — stacked layout, sticky graphic shrinks to a top band.
+   Actual pixel heights are set by JS (see script.js applyResponsiveLayout),
+   these vh values are just the pre-JS fallback. */
+@media (max-width: 800px){
+    #scroll{
+        flex-direction:column;
+    }
+    .scroll__graphic{
+        width:100%;
+        height:45vh;
+        top:0;
+    }
+    .chart{
+        width:95%;
+        height:85%;
+    }
+    .scroll__text{
+        width:100%;
+    }
+    .step{
+        min-height:auto;
+        padding:1.5rem 1rem;
+    }
+    .step .card{
+        max-width:100%;
+        padding:1.25rem;
+    }
+    #map-legend{
+        font-size:10px;
+        gap:8px;
+    }
 }
