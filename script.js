@@ -12,6 +12,8 @@ const GREEN = {
 const BLUE = { ocean:"#14283a", land:"#1e3448", border:"rgba(255,255,255,.12)", grid:"rgba(255,255,255,.05)" };
 const POWDER = { cathode:"#4a4a48", anode:"#26241f" };
 
+let lastKnownStep = 0;
+
 let proj, geoPath, baseScale, baseTranslate;
 function setupProjection(){
   baseScale = W/5.5; baseTranslate=[W*0.46,H*0.52];
@@ -44,11 +46,13 @@ d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json").then(w
   drawBaseMap(world); buildSceneElements(); buildLegend(); mapReady=true;
   proj.scale(baseScale).center([0,10]).translate([W/2,H/2]); redrawMap();
   mineNodes.style("opacity",0); scroller.resize();
+  currentStep=-1; actuallyRenderStep(lastKnownStep);
 }).catch(err=>{
   console.error("MAP LOAD FAILED:",err);
   svg.append("rect").attr("width",W).attr("height",H).style("fill",BLUE.ocean);
   svg.append("text").attr("x",W/2).attr("y",H/2).attr("text-anchor","middle").style("fill",GREEN[200]).style("font-size","8px").text("Map blocked");
   buildSceneElements(); buildLegend(); mapReady=true; mineNodes.style("opacity",0); scroller.resize();
+  currentStep=-1; actuallyRenderStep(lastKnownStep);
 });
 
 const MINES=[
@@ -67,7 +71,7 @@ const MINES=[
 ];
 const PROC_HUBS=[
   {label:"Lithium refining",lon:119,lat:36,mat:"Lithium"},
-  {label:"Graphite purification",lon:113,lat:38,mat:"Graphite"},
+  {label:"Graphite processing",lon:113,lat:38,mat:"Graphite"},
   {label:"LFP precursor",lon:117,lat:31,mat:"Iron / Phosphate"},
   {label:"Copper foil",lon:121,lat:30,mat:"Copper"},
   {label:"Aluminium foil",lon:114,lat:23,mat:"Aluminium (bauxite)"},
@@ -374,11 +378,30 @@ function actuallyRenderStep(index){
   }
 }
 
+// MOBILE RESPONSIVENESS
+// Per scrollytelling best practice: don't rely on raw vh for layout that
+// scroll triggers depend on (mobile browser nav bars resize the viewport
+// mid-scroll and throw off trigger points). Use JS-measured px heights
+// instead, and matchMedia to branch mobile vs desktop.
+const mqMobile = window.matchMedia("(max-width: 800px)");
+function applyResponsiveLayout(){
+  const isMobile = mqMobile.matches;
+  document.documentElement.classList.toggle("is-mobile", isMobile);
+  const vh = window.innerHeight;
+  const graphic = document.querySelector(".scroll__graphic");
+  if(graphic) graphic.style.height = (isMobile ? Math.round(vh*0.45) : vh) + "px";
+  document.querySelectorAll(".step").forEach(s=>{
+    s.style.minHeight = isMobile ? "auto" : vh + "px";
+  });
+}
+applyResponsiveLayout();
+if(mqMobile.addEventListener) mqMobile.addEventListener("change", applyResponsiveLayout);
+
 const scroller=scrollama();
 scroller.setup({container:"#scroll",step:".step",offset:0.85})
   .onStepEnter(({element,index})=>{
     document.querySelectorAll(".step").forEach(s=>s.classList.remove("is-active"));
-    element.classList.add("is-active"); renderStep(index);
+    element.classList.add("is-active"); lastKnownStep=index; renderStep(index);
   });
-window.addEventListener("resize",()=>scroller.resize());
+window.addEventListener("resize",()=>{ applyResponsiveLayout(); scroller.resize(); });
 });
