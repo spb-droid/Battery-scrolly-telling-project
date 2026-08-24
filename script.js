@@ -42,13 +42,22 @@ function drawBaseMap(world){
 }
 
 setupProjection();
+
+// Show *something* immediately instead of a blank white box while the
+// map data is still downloading — an ocean-coloured background — so if
+// someone scrolls into "Underground" before the real map is ready, they
+// see a placeholder rather than nothing at all.
+svg.append("rect").attr("id","ocean-placeholder").attr("width",W).attr("height",H).style("fill",BLUE.ocean);
+
 d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json").then(world=>{
+  svg.select("#ocean-placeholder").remove();
   drawBaseMap(world); buildSceneElements(); buildLegend(); mapReady=true;
   proj.scale(baseScale).center([0,10]).translate([W/2,H/2]); redrawMap();
   mineNodes.style("opacity",0); scroller.resize();
   currentStep=-1; actuallyRenderStep(lastKnownStep);
 }).catch(err=>{
   console.error("MAP LOAD FAILED:",err);
+  svg.select("#ocean-placeholder").remove();
   svg.append("rect").attr("width",W).attr("height",H).style("fill",BLUE.ocean);
   svg.append("text").attr("x",W/2).attr("y",H/2).attr("text-anchor","middle").style("fill",GREEN[200]).style("font-size","8px").text("Map blocked");
   buildSceneElements(); buildLegend(); mapReady=true; mineNodes.style("opacity",0); scroller.resize();
@@ -334,6 +343,12 @@ function actuallyRenderStep(index){
   renderGen+=1; const myGen=renderGen;
   const legendDiv=document.getElementById("map-legend");
   const mapLayer=svg.select("#g-clipped"), overlayLayer=svg.select("#g-overlay");
+  // Cancel any fade in/out animation left over from the PREVIOUS step
+  // before this step tries to set opacity directly. Without this, a
+  // still-running fade from the last step can silently win the race and
+  // overwrite the instant opacity change below a moment later — which is
+  // why Underground could load invisibly while later steps were fine.
+  mapLayer.interrupt(); overlayLayer.interrupt(); mineNodes.interrupt();
   clearFlowAnims(); clearElectrodeAnims();
   svg.select("#g-proc").selectAll("*").remove(); svg.select("#g-flow").selectAll("*").remove(); svg.select("#g-overlay").selectAll("*").remove();
 
