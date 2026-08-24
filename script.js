@@ -1,3 +1,12 @@
+// Guard against this file being included/run twice on the same page —
+// the CMS's desktop preview appears to do this, and it causes two full
+// copies of the map/animation logic to run at once, fighting over the
+// same DOM elements (which is what was crashing the flow-line dots).
+if (window.__batteryScrollyInitialized) {
+  console.log("script.js already running on this page — skipping duplicate init");
+} else {
+  window.__batteryScrollyInitialized = true;
+
 window.addEventListener("DOMContentLoaded", function () {
 console.log("JS LOADED ✔");
 
@@ -167,10 +176,13 @@ function buildFlowLines(myGen){
       .transition().delay(i*80).duration(900).ease(d3.easeCubicOut).style("opacity",0.85).style("stroke-dashoffset",0);
     const dot=fL.append("circle").attr("class","flow-dot").attr("r",1.6).style("fill",GREEN[0]).style("opacity",0);
     const node=path.node();
-    function anim(){ if(myGen!==renderGen)return;
+    function anim(){ if(myGen!==renderGen||!node.isConnected)return;
       const len=node.getTotalLength();
       dot.style("opacity",0.9).transition().duration(1400).ease(d3.easeLinear)
-        .attrTween("transform",()=>t=>{const p=node.getPointAtLength(t*len);return `translate(${p.x},${p.y})`;})
+        .attrTween("transform",()=>t=>{
+          if(!node.isConnected)return null; // path was removed mid-animation — stop reading it
+          const p=node.getPointAtLength(t*len);return `translate(${p.x},${p.y})`;
+        })
         .on("end",function(){if(myGen!==renderGen)return;dot.style("opacity",0);const id=setTimeout(anim,600+Math.random()*1200);flowAnimTimers.push(id);});
     }
     const sId=setTimeout(anim,i*80+1000); flowAnimTimers.push(sId);
@@ -213,8 +225,11 @@ function buildElectrodeScene(myGen){
       path.style("stroke-dasharray",len).style("stroke-dashoffset",len).transition().delay(ld).duration(750).ease(d3.easeCubicOut).style("opacity",0.85).style("stroke-dashoffset",0);
       g.append("text").text(mine.mat.split(" ")[0]).attr("x",mx).attr("y",my-6).attr("text-anchor","middle").style("font-family","sans-serif").style("font-size","5px").style("fill",GREEN[800]).style("font-weight","600").style("opacity",0).transition().delay(ld).duration(300).style("opacity",1);
       const node=path.node();
-      function tr(){if(myGen!==renderGen)return;const dot=g.append("circle").attr("r",1.2).style("fill",GREEN[800]).style("opacity",0.85);
-        dot.transition().duration(1000).ease(d3.easeLinear).attrTween("transform",()=>t=>{const p=node.getPointAtLength(t*len);return `translate(${p.x},${p.y})`;}).on("end",function(){d3.select(this).remove();if(myGen!==renderGen)return;const id=setTimeout(tr,400+Math.random()*900);electrodeTimers.push(id);});}
+      function tr(){if(myGen!==renderGen||!node.isConnected)return;const dot=g.append("circle").attr("r",1.2).style("fill",GREEN[800]).style("opacity",0.85);
+        dot.transition().duration(1000).ease(d3.easeLinear).attrTween("transform",()=>t=>{
+          if(!node.isConnected)return null; // path was removed mid-animation — stop reading it
+          const p=node.getPointAtLength(t*len);return `translate(${p.x},${p.y})`;
+        }).on("end",function(){d3.select(this).remove();if(myGen!==renderGen)return;const id=setTimeout(tr,400+Math.random()*900);electrodeTimers.push(id);});}
       const sId=setTimeout(tr,ld+750); electrodeTimers.push(sId);
     });
   }
@@ -420,3 +435,5 @@ scroller.setup({container:"#scroll",step:".step",offset:0.85})
   });
 window.addEventListener("resize",()=>{ applyResponsiveLayout(); scroller.resize(); });
 });
+
+} // end duplicate-load guard
